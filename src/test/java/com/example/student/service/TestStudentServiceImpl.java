@@ -123,7 +123,6 @@ public class TestStudentServiceImpl {
         studentUpdated.setUniversity("asd");
 
         Mockito.when(studentRepository.findById(Mockito.anyLong())).thenReturn(Mono.just(student));
-        Mockito.when(studentRepository.save(Mockito.refEq(studentUpdates))).thenReturn(Mono.just(studentUpdated));
 
         studentService.update(1L,studentUpdates).doOnNext(studentEntity->Assertions.assertThat(studentEntity).isEqualTo(studentUpdated));
     }
