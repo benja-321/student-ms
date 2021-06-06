@@ -15,4 +15,8 @@ public interface StudentService {
     public Mono<StudentEntity> update(Long id, StudentEntity studentEntity);
 
     public Mono<Void> delete(Long id);
+
+    public Mono<StudentEntity> getByDocumentNumber(String documentNumber);
+
+    public void sendMessage(String message, String topic);
 }

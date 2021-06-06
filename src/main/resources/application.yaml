@@ -1,6 +1,22 @@
+server:
+  port: 8080
+info:
+  title: Student API
+  version: @project.version@
+  description: @project.description@
+
 spring:
   r2dbc:
     url: r2dbc:postgresql://localhost:5432/db-students
     username: postgres
     password: 123456
     initialization-mode: always
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+kafka:
+  topic:
+    communicate: communicate-student

@@ -3,7 +3,10 @@ package com.example.student.service;
 import com.example.student.entity.StudentEntity;
 import com.example.student.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -11,7 +14,10 @@ import reactor.core.publisher.Mono;
 public class StudentServiceImpl implements StudentService{
 
     @Autowired
-    StudentRepository studentRepository;
+    private StudentRepository studentRepository;
+    
+    @Autowired
+    private KafkaTemplate producer;
 
     @Override
     public Flux<StudentEntity> getAll(){
@@ -47,5 +53,16 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public Mono<Void> delete(Long id){
         return studentRepository.deleteById(id);
+    }
+
+    @Override
+    public Mono<StudentEntity> getByDocumentNumber(String documentNumber){
+        return studentRepository.findByDocumentNumber(documentNumber)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND,"Student not found")));
+    }
+
+    @Override
+    public void sendMessage(String message, String topic){
+        producer.send(topic,message);
     }
 }
