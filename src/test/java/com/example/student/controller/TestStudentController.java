@@ -40,7 +40,7 @@ public class TestStudentController {
 
         Mockito.when(studentService.getAll()).thenReturn(fluxStudent);
 
-        Assertions.assertThat(studentController.getAllStudents()).isEqualTo(fluxStudent);
+        Assertions.assertThat(studentController.getAllStudents().getBody()).isEqualTo(fluxStudent);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class TestStudentController {
 
         Mockito.when(studentService.getById(Mockito.anyLong())).thenReturn(monoStudent);
 
-        Assertions.assertThat(studentController.getStudentById(1L)).isEqualTo(monoStudent);
+        Assertions.assertThat(studentController.getStudentById(1L).getBody()).isEqualTo(monoStudent);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class TestStudentController {
 
         Mockito.when(studentService.save(Mockito.refEq(student))).thenReturn(monoStudent);
 
-        Assertions.assertThat(studentController.insertStudent(student)).isEqualTo(monoStudent);
+        Assertions.assertThat(studentController.insertStudent(student).getBody()).isEqualTo(monoStudent);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class TestStudentController {
 
         Mockito.when(studentService.update(Mockito.anyLong(),Mockito.refEq(studentUpdates))).thenReturn(monoStudent);
 
-        Assertions.assertThat(studentController.updateStudent(1L,studentUpdates)).isEqualTo(monoStudent);
+        Assertions.assertThat(studentController.updateStudent(1L,studentUpdates).getBody()).isEqualTo(monoStudent);
 
     }
 
@@ -121,5 +121,25 @@ public class TestStudentController {
     public void testDeleteStudentSuccessfully(){
         studentController.deleteStudent(1L);
         Mockito.verify(studentService,Mockito.times(1)).delete(Mockito.anyLong());
+    }
+
+    @Test
+    public void testGetStudentByDocumentNumberSuccessfully(){
+        StudentEntity student = new StudentEntity();
+        student.setId(1L);
+        student.setAddress("qwe");
+        student.setAge(21);
+        student.setBirthDate(LocalDate.now());
+        student.setCivilStatus("qwe");
+        student.setStatus("asd");
+        student.setDocumentNumber("1234");
+        student.setGender('M');
+        student.setDocumentType("asd");
+        student.setUniversity("asd");
+        Mono<StudentEntity> monoStudent = Mono.just(student);
+
+        Mockito.when(studentService.getByDocumentNumber(Mockito.anyString())).thenReturn(monoStudent);
+
+        Assertions.assertThat(studentController.getStudentByDocumentNumber("1234").getBody()).isEqualTo(monoStudent);
     }
 }

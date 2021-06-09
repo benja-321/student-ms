@@ -19,4 +19,4 @@ spring:
 
 kafka:
   topic:
-    communicate: communicate-student
+    communicate: communicate-finded
